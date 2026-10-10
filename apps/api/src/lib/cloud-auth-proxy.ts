@@ -211,7 +211,7 @@ async function findHandoffCodeByState(state: string): Promise<string | null> {
  * If a code_challenge was stored, the caller must provide the matching
  * code_verifier (PKCE S256). Returns null on mismatch.
  */
-export async function exchangeHandoffCode(
+async function exchangeHandoffCode(
   code: string,
   codeVerifier?: string,
 ): Promise<{ user: CloudUser; sessionToken: string } | null> {
