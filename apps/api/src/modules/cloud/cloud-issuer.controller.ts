@@ -10,6 +10,7 @@
  *   GET  /api/cloud/account
  */
 
+import { reportCaughtError as observeCaughtError } from "@repo/core/diagnostics";
 import type { Context } from "hono";
 import { repos } from "@repo/db";
 import { auth } from "@repo/platform/engine/lib/auth";
@@ -78,7 +79,10 @@ export async function desktopHandoff(c: Context) {
 
 /** POST /api/cloud/exchange-code — the one-time code is the credential. */
 export async function exchangeCode(c: Context) {
-  const body = await c.req.json<{ code?: string; code_verifier?: string }>().catch(() => null);
+  const body = await c.req.json<{ code?: string; code_verifier?: string }>().catch((diagnosticFailure) => {
+    observeCaughtError(diagnosticFailure, "api/modules/cloud/cloud-issuer.controller");
+    return null;
+  });
   if (!body?.code) return c.json({ error: "Code required" }, 400);
   const result = await exchangeHandoffCode(body.code, body.code_verifier);
   if (!result) return c.json({ error: "Invalid or expired code" }, 401);

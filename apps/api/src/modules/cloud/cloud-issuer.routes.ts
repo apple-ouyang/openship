@@ -13,7 +13,7 @@ export const cloudIssuerRoutes = new Hono();
 const r = secureRouter(cloudIssuerRoutes, {
   module: "cloud-issuer",
   basePath: "/api/cloud",
-  mcpExcluded: "Desktop login handoff for this self-hosted instance.",
+  mcpExcluded: "Internal Cloud relay or browser credential handoff. Use the authenticated project, domain, GitHub, analytics and Cloud status tools instead.",
 });
 
 r.public(
